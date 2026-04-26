@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitPro — ออกกำลังกายอย่างมืออาชีพ</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#7c3aed" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="FitPro" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+<!-- ===== SPLASH SCREEN ===== -->
+<div id="splash" class="splash">
+  <div class="splash-logo">
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+      <circle cx="32" cy="32" r="32" fill="url(#splashGrad)"/>
+      <path d="M14 32h4l4-12 6 24 6-20 4 8h12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <defs>
+        <linearGradient id="splashGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#7c3aed"/>
+          <stop offset="1" stop-color="#06b6d4"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+  <h1 class="splash-title">FitPro</h1>
+  <p class="splash-sub">ออกกำลังกายอย่างมืออาชีพ</p>
+  <div class="splash-bar"><div class="splash-progress"></div></div>
+</div>
+
+<!-- ===== APP WRAPPER ===== -->
+<div id="app" class="app hidden">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <svg width="32" height="32" viewBox="0 0 64 64" fill="none">
+        <circle cx="32" cy="32" r="32" fill="url(#navGrad)"/>
+        <path d="M14 32h4l4-12 6 24 6-20 4 8h12" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="navGrad" x1="0" y1="0" x2="64" y2="64">
+            <stop stop-color="#7c3aed"/><stop offset="1" stop-color="#06b6d4"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span>FitPro</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span>แดชบอร์ด</span>
+      </button>
+      <button class="nav-item" data-page="exercises" onclick="navigate('exercises')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5h11M6.5 17.5h11M4 12h16M2 9l2 3-2 3M22 9l-2 3 2 3"/></svg>
+        <span>ท่าออกกำลังกาย</span>
+      </button>
+      <button class="nav-item" data-page="plans" onclick="navigate('plans')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+        <span>โปรแกรมเทรน</span>
+      </button>
+      <button class="nav-item" data-page="workout" onclick="navigate('workout')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span>เริ่มเทรน</span>
+      </button>
+      <button class="nav-item" data-page="progress" onclick="navigate('progress')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span>ความก้าวหน้า</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-avatar">ก</div>
+      <div class="user-info">
+        <div class="user-name">พี่เอก</div>
+        <div class="user-level">Intermediate 🔥</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main">
+
+    <!-- MOBILE TOPBAR -->
+    <header class="topbar">
+      <button class="menu-btn" onclick="toggleSidebar()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <span class="topbar-title" id="pageTitle">แดชบอร์ด</span>
+      <button class="notif-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="notif-dot"></span>
+      </button>
+    </header>
+
+    <!-- ===== PAGE: DASHBOARD ===== -->
+    <section class="page active" id="page-dashboard">
+      <div class="page-content">
+
+        <!-- Hero Banner -->
+        <div class="hero-banner">
+          <div class="hero-text">
+            <p class="hero-greeting">สวัสดีวันนี้ 👋</p>
+            <h2 class="hero-name">พี่เอก</h2>
+            <p class="hero-sub">พร้อมไหมสำหรับการเทรนวันนี้?</p>
+            <button class="btn-primary" onclick="navigate('workout')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              เริ่มออกกำลังกาย
+            </button>
+          </div>
+          <div class="hero-art">
+            <svg width="180" height="200" viewBox="0 0 180 200" fill="none">
+              <!-- Running figure -->
+              <circle cx="90" cy="30" r="18" fill="url(#figGrad)" opacity="0.9"/>
+              <ellipse cx="90" cy="60" rx="4" ry="6" fill="url(#figGrad)" opacity="0.8"/>
+              <!-- Body -->
+              <rect x="72" y="66" width="36" height="45" rx="10" fill="url(#figGrad)"/>
+              <!-- Arms -->
+              <path d="M72 75 Q50 85 45 100" stroke="url(#figGrad)" stroke-width="10" stroke-linecap="round"/>
+              <path d="M108 75 Q130 90 135 108" stroke="url(#figGrad)" stroke-width="10" stroke-linecap="round"/>
+              <!-- Legs -->
+              <path d="M82 111 Q75 140 65 165" stroke="url(#figGrad)" stroke-width="12" stroke-linecap="round"/>
+              <path d="M98 111 Q105 135 118 158" stroke="url(#figGrad)" stroke-width="12" stroke-linecap="round"/>
+              <!-- Feet -->
+              <ellipse cx="60" cy="168" rx="12" ry="6" fill="url(#figGrad)" opacity="0.7"/>
+              <ellipse cx="122" cy="162" rx="12" ry="6" fill="url(#figGrad)" opacity="0.7"/>
+              <!-- Glow rings -->
+              <circle cx="90" cy="100" r="85" stroke="url(#ringGrad)" stroke-width="1.5" opacity="0.3" stroke-dasharray="8 4"/>
+              <circle cx="90" cy="100" r="75" stroke="url(#ringGrad)" stroke-width="1" opacity="0.2" stroke-dasharray="4 6"/>
+              <defs>
+                <linearGradient id="figGrad" x1="45" y1="0" x2="135" y2="200" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#a78bfa"/><stop offset="1" stop-color="#67e8f9"/>
+                </linearGradient>
+                <linearGradient id="ringGrad" x1="0" y1="0" x2="180" y2="200" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#7c3aed"/><stop offset="1" stop-color="#06b6d4"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M17.657 18.657A8 8 0 016.343 7.343M6.343 7.343A8 8 0 0117.657 18.657M12 4v1m0 14v1M4 12H3m18 0h-1"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-val" id="streakCount">7</div>
+              <div class="stat-lbl">วันติดต่อกัน 🔥</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#059669,#34d399)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-val" id="caloriesTotal">2,450</div>
+              <div class="stat-lbl">แคลอรี่สัปดาห์นี้</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#dc2626,#f87171)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-val" id="workoutsCount">24</div>
+              <div class="stat-lbl">เซสชันทั้งหมด</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#d97706,#fbbf24)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            </div>
+            <div class="stat-info">
+              <div class="stat-val" id="hoursTotal">18.5</div>
+              <div class="stat-lbl">ชั่วโมงออกกำลังกาย</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Today's Workout -->
+        <div class="section-header">
+          <h3>โปรแกรมวันนี้</h3>
+          <button class="see-all" onclick="navigate('plans')">ดูทั้งหมด →</button>
+        </div>
+        <div class="today-workout-card">
+          <div class="today-badge">วันที่ 4 / 5</div>
+          <h4>Upper Body Power 💪</h4>
+          <p>Chest · Shoulders · Triceps</p>
+          <div class="today-exercises">
+            <div class="today-ex"><span class="ex-dot done"></span>Bench Press<span>4×8</span></div>
+            <div class="today-ex"><span class="ex-dot done"></span>Overhead Press<span>3×10</span></div>
+            <div class="today-ex"><span class="ex-dot current"></span>Incline Dumbbell<span>3×12</span></div>
+            <div class="today-ex"><span class="ex-dot"></span>Lateral Raise<span>4×15</span></div>
+            <div class="today-ex"><span class="ex-dot"></span>Tricep Pushdown<span>3×12</span></div>
+          </div>
+          <div class="today-footer">
+            <span>⏱ ~55 นาที</span>
+            <button class="btn-primary sm" onclick="navigate('workout')">เริ่มเลย</button>
+          </div>
+        </div>
+
+        <!-- Weekly Progress Bar -->
+        <div class="section-header">
+          <h3>เป้าหมายสัปดาห์นี้</h3>
+          <span class="goal-text">4/5 วัน</span>
+        </div>
+        <div class="week-days">
+          <div class="day-pill done">จ</div>
+          <div class="day-pill done">อ</div>
+          <div class="day-pill done">พ</div>
+          <div class="day-pill done">พฤ</div>
+          <div class="day-pill active">ศ</div>
+          <div class="day-pill">ส</div>
+          <div class="day-pill rest">อา</div>
+        </div>
+
+        <!-- Muscle Map -->
+        <div class="section-header"><h3>กล้ามเนื้อที่เทรนสัปดาห์นี้</h3></div>
+        <div class="muscle-map-card">
+          <div class="muscle-groups">
+            <div class="muscle-item"><div class="muscle-bar" style="--pct:85%;--col:#7c3aed"></div><span>หน้าอก</span><b>85%</b></div>
+            <div class="muscle-item"><div class="muscle-bar" style="--pct:70%;--col:#06b6d4"></div><span>หลัง</span><b>70%</b></div>
+            <div class="muscle-item"><div class="muscle-bar" style="--pct:92%;--col:#10b981"></div><span>ขา</span><b>92%</b></div>
+            <div class="muscle-item"><div class="muscle-bar" style="--pct:60%;--col:#f59e0b"></div><span>ไหล่</span><b>60%</b></div>
+            <div class="muscle-item"><div class="muscle-bar" style="--pct:75%;--col:#ef4444"></div><span>แขน</span><b>75%</b></div>
+            <div class="muscle-item"><div class="muscle-bar" style="--pct:50%;--col:#8b5cf6"></div><span>คอร์</span><b>50%</b></div>
+          </div>
+          <div class="body-svg-wrap">
+            <svg width="120" height="220" viewBox="0 0 120 220" fill="none">
+              <!-- Head -->
+              <circle cx="60" cy="22" r="16" fill="#1e293b" stroke="#7c3aed" stroke-width="2"/>
+              <!-- Neck -->
+              <rect x="55" y="36" width="10" height="10" fill="#1e293b"/>
+              <!-- Torso -->
+              <rect x="35" y="46" width="50" height="60" rx="8" fill="#1e293b" stroke="#7c3aed" stroke-width="2"/>
+              <!-- Chest highlight -->
+              <ellipse cx="49" cy="66" rx="10" ry="8" fill="#7c3aed" opacity="0.5"/>
+              <ellipse cx="71" cy="66" rx="10" ry="8" fill="#7c3aed" opacity="0.5"/>
+              <!-- Abs -->
+              <rect x="51" y="80" width="8" height="7" rx="2" fill="#7c3aed" opacity="0.4"/>
+              <rect x="61" y="80" width="8" height="7" rx="2" fill="#7c3aed" opacity="0.4"/>
+              <rect x="51" y="90" width="8" height="6" rx="2" fill="#7c3aed" opacity="0.3"/>
+              <rect x="61" y="90" width="8" height="6" rx="2" fill="#7c3aed" opacity="0.3"/>
+              <!-- Left Arm -->
+              <path d="M35 52 Q16 68 14 92" stroke="#06b6d4" stroke-width="14" stroke-linecap="round"/>
+              <path d="M35 52 Q16 68 14 92" stroke="#0e2038" stroke-width="10" stroke-linecap="round"/>
+              <!-- Right Arm -->
+              <path d="M85 52 Q104 68 106 92" stroke="#06b6d4" stroke-width="14" stroke-linecap="round"/>
+              <path d="M85 52 Q104 68 106 92" stroke="#0e2038" stroke-width="10" stroke-linecap="round"/>
+              <!-- Forearms -->
+              <path d="M14 92 Q10 116 12 136" stroke="#334155" stroke-width="11" stroke-linecap="round"/>
+              <path d="M106 92 Q110 116 108 136" stroke="#334155" stroke-width="11" stroke-linecap="round"/>
+              <!-- Hips -->
+              <rect x="37" y="104" width="46" height="20" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+              <!-- Left Leg -->
+              <path d="M48 124 Q44 158 42 188" stroke="#10b981" stroke-width="15" stroke-linecap="round"/>
+              <path d="M48 124 Q44 158 42 188" stroke="#0e2038" stroke-width="11" stroke-linecap="round"/>
+              <!-- Right Leg -->
+              <path d="M72 124 Q76 158 78 188" stroke="#10b981" stroke-width="15" stroke-linecap="round"/>
+              <path d="M72 124 Q76 158 78 188" stroke="#0e2038" stroke-width="11" stroke-linecap="round"/>
+              <!-- Feet -->
+              <ellipse cx="40" cy="192" rx="14" ry="7" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+              <ellipse cx="80" cy="192" rx="14" ry="7" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== PAGE: EXERCISES ===== -->
+    <section class="page" id="page-exercises">
+      <div class="page-content">
+        <div class="exercises-header">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" placeholder="ค้นหาท่าออกกำลังกาย..." id="searchInput" oninput="filterExercises()" />
+          </div>
+          <div class="filter-chips">
+            <button class="chip active" onclick="filterByGroup('all',this)">ทั้งหมด</button>
+            <button class="chip" onclick="filterByGroup('chest',this)">หน้าอก</button>
+            <button class="chip" onclick="filterByGroup('back',this)">หลัง</button>
+            <button class="chip" onclick="filterByGroup('legs',this)">ขา</button>
+            <button class="chip" onclick="filterByGroup('shoulders',this)">ไหล่</button>
+            <button class="chip" onclick="filterByGroup('arms',this)">แขน</button>
+            <button class="chip" onclick="filterByGroup('core',this)">คอร์</button>
+            <button class="chip" onclick="filterByGroup('cardio',this)">คาร์ดิโอ</button>
+          </div>
+        </div>
+
+        <div class="exercises-grid" id="exercisesGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PAGE: PLANS ===== -->
+    <section class="page" id="page-plans">
+      <div class="page-content">
+
+        <!-- Wizard Step Indicator -->
+        <div class="wizard-steps" id="wizardSteps">
+          <div class="ws-step active" id="ws1">
+            <div class="ws-num">1</div><span>สถานที่</span>
+          </div>
+          <div class="ws-line" id="wl1"></div>
+          <div class="ws-step" id="ws2">
+            <div class="ws-num">2</div><span>อุปกรณ์</span>
+          </div>
+          <div class="ws-line" id="wl2"></div>
+          <div class="ws-step" id="ws3">
+            <div class="ws-num">3</div><span>เป้าหมาย</span>
+          </div>
+          <div class="ws-line" id="wl3"></div>
+          <div class="ws-step" id="ws4">
+            <div class="ws-num">4</div><span>โปรแกรม</span>
+          </div>
+        </div>
+
+        <!-- Step 1: Location -->
+        <div id="plansStep1" class="wiz-content">
+          <div class="wiz-title">
+            <h3>เทรนที่ไหน?</h3>
+            <p>เลือกสถานที่ที่คุณออกกำลังกายเป็นหลัก</p>
+          </div>
+          <div class="loc-grid">
+            <div class="loc-card" id="loc-gym" onclick="selectLocation('gym')">
+              <div class="loc-art">
+                <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+                  <rect x="8" y="30" width="56" height="12" rx="6" fill="rgba(124,58,237,0.3)" stroke="#7c3aed" stroke-width="2"/>
+                  <rect x="4" y="24" width="12" height="24" rx="4" fill="#7c3aed" opacity="0.8"/>
+                  <rect x="56" y="24" width="12" height="24" rx="4" fill="#7c3aed" opacity="0.8"/>
+                  <rect x="0" y="28" width="8" height="16" rx="3" fill="#a78bfa"/>
+                  <rect x="64" y="28" width="8" height="16" rx="3" fill="#a78bfa"/>
+                  <circle cx="36" cy="36" r="5" fill="#7c3aed"/>
+                </svg>
+              </div>
+              <h4>ยิม (Gym)</h4>
+              <p>มีอุปกรณ์ครบ บาร์เบล ดัมเบล เครื่อง</p>
+              <div class="loc-badge">เลือก</div>
+            </div>
+            <div class="loc-card" id="loc-home" onclick="selectLocation('home')">
+              <div class="loc-art">
+                <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+                  <path d="M36 8 L64 30 L64 64 L8 64 L8 30 Z" fill="rgba(6,182,212,0.15)" stroke="#06b6d4" stroke-width="2"/>
+                  <rect x="28" y="44" width="16" height="20" rx="2" fill="#06b6d4" opacity="0.6"/>
+                  <rect x="20" y="30" width="12" height="12" rx="2" fill="#67e8f9" opacity="0.5"/>
+                  <rect x="40" y="30" width="12" height="12" rx="2" fill="#67e8f9" opacity="0.5"/>
+                  <path d="M36 4 L68 28" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round"/>
+                  <path d="M36 4 L4 28" stroke="#06b6d4" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <h4>บ้าน (Home)</h4>
+              <p>เทรนที่บ้าน มีหรือไม่มีอุปกรณ์ก็ได้</p>
+              <div class="loc-badge">เลือก</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Equipment -->
+        <div id="plansStep2" class="wiz-content" style="display:none">
+          <div class="wiz-title">
+            <h3>มีอุปกรณ์อะไรบ้าง?</h3>
+            <p>เลือกทั้งหมดที่มี — ระบบจะออกแบบโปรแกรมให้เหมาะสม</p>
+          </div>
+          <div class="equip-grid" id="equipGrid">
+            <!-- Populated by JS -->
+          </div>
+          <div class="wiz-nav">
+            <button class="btn-back" onclick="wizGo(1)">← ย้อนกลับ</button>
+            <button class="btn-primary" onclick="wizGo(3)">ถัดไป →</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Goal -->
+        <div id="plansStep3" class="wiz-content" style="display:none">
+          <div class="wiz-title">
+            <h3>เป้าหมายของคุณคืออะไร?</h3>
+            <p>โปรแกรมจะถูกออกแบบเฉพาะตามเป้าหมายนี้</p>
+          </div>
+          <div class="goal-grid">
+            <div class="goal-card" onclick="selectGoal('fat_loss', this)">
+              <div class="goal-emoji">🔥</div>
+              <h4>ลดไขมัน</h4>
+              <p>เพิ่มการเผาผลาญ ลดไขมัน รักษามวลกล้ามเนื้อ</p>
+              <div class="goal-tags"><span>Cardio</span><span>HIIT</span><span>Circuit</span></div>
+            </div>
+            <div class="goal-card" onclick="selectGoal('muscle', this)">
+              <div class="goal-emoji">💪</div>
+              <h4>เพิ่มกล้ามเนื้อ</h4>
+              <p>เพิ่มมวลกล้ามเนื้อ ขนาด และรูปทรง</p>
+              <div class="goal-tags"><span>Hypertrophy</span><span>Volume</span></div>
+            </div>
+            <div class="goal-card" onclick="selectGoal('strength', this)">
+              <div class="goal-emoji">⚡</div>
+              <h4>เพิ่มความแข็งแรง</h4>
+              <p>ยกหนักขึ้น แข็งแกร่งขึ้น PR ใหม่ทุกสัปดาห์</p>
+              <div class="goal-tags"><span>Strength</span><span>Heavy</span><span>Low Rep</span></div>
+            </div>
+            <div class="goal-card" onclick="selectGoal('endurance', this)">
+              <div class="goal-emoji">🏃</div>
+              <h4>เพิ่มความอดทน</h4>
+              <p>หัวใจแข็งแรง ทนนาน ฟิตสำหรับชีวิตประจำวัน</p>
+              <div class="goal-tags"><span>Cardio</span><span>High Rep</span></div>
+            </div>
+            <div class="goal-card" onclick="selectGoal('athletic', this)">
+              <div class="goal-emoji">🏆</div>
+              <h4>กีฬาและฟังก์ชัน</h4>
+              <p>เร็ว พลัง ว่องไว เหมาะสำหรับนักกีฬา</p>
+              <div class="goal-tags"><span>Power</span><span>Speed</span><span>Agility</span></div>
+            </div>
+            <div class="goal-card" onclick="selectGoal('general', this)">
+              <div class="goal-emoji">🌟</div>
+              <h4>ฟิตเนสทั่วไป</h4>
+              <p>สุขภาพดี รูปร่างดี แข็งแรงสมดุลทุกด้าน</p>
+              <div class="goal-tags"><span>Balanced</span><span>Health</span></div>
+            </div>
+          </div>
+          <div class="wiz-nav">
+            <button class="btn-back" onclick="wizGo(2)">← ย้อนกลับ</button>
+          </div>
+        </div>
+
+        <!-- Step 4: Generated Program -->
+        <div id="plansStep4" class="wiz-content" style="display:none">
+          <div id="generatedProgram"><!-- Populated by JS --></div>
+          <div class="wiz-nav" style="margin-top:8px">
+            <button class="btn-back" onclick="wizGo(3)">← เปลี่ยนเป้าหมาย</button>
+            <button class="btn-primary" onclick="startGeneratedPlan()">เริ่มโปรแกรมนี้ →</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== PAGE: WORKOUT SESSION ===== -->
+    <section class="page" id="page-workout">
+      <div class="page-content">
+
+        <!-- ===== MODE A: ASSESSMENT (ครั้งแรก) ===== -->
+        <div id="assessmentMode" style="display:none">
+          <div class="assess-hero">
+            <div class="assess-hero-icon">📋</div>
+            <div>
+              <h2>ประเมินศักยภาพครั้งแรก</h2>
+              <p>กรอกข้อมูลการเทรนที่ทำได้จริงวันนี้<br>ระบบจะออกแบบน้ำหนักที่เหมาะกับคุณในครั้งถัดไป</p>
+            </div>
+          </div>
+
+          <div class="rpe-legend">
+            <span class="rpe-item" style="--c:#22c55e">1–4<small>เบามาก</small></span>
+            <span class="rpe-item" style="--c:#84cc16">5–6<small>พอดี</small></span>
+            <span class="rpe-item" style="--c:#f59e0b">7–8<small>หนัก</small></span>
+            <span class="rpe-item" style="--c:#ef4444">9–10<small>สุดแรง</small></span>
+          </div>
+
+          <div id="assessmentForms">
+            <!-- Populated by JS -->
+          </div>
+
+          <button class="btn-primary full" onclick="submitAssessment()" id="assessSubmitBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            บันทึกผลและรับคำแนะนำ
+          </button>
+        </div>
+
+        <!-- ===== MODE B: SESSION (ครั้งที่ 2+) ===== -->
+        <div id="sessionMode" style="display:none">
+          <div class="workout-session">
+            <div class="session-header">
+              <div class="session-info">
+                <h3 id="sessionName">Upper Body Power</h3>
+                <p id="sessionSub">เซสชันสด · วันศุกร์ 26 เม.ย.</p>
+              </div>
+              <button class="btn-danger sm" onclick="endWorkout()">จบการเทรน</button>
+            </div>
+
+            <!-- Recommendation Banner -->
+            <div class="rec-banner" id="recBanner" style="display:none">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3M6.343 6.343l-.707-.707M12 20v1M6.343 17.657l-.707.707M17.657 17.657l-.707.707"/></svg>
+              <span>น้ำหนักแนะนำคำนวณจากผลประเมินของคุณแล้ว — ปรับได้ตามความรู้สึกวันนี้</span>
+            </div>
+
+            <!-- Timer -->
+            <div class="timer-ring">
+              <svg width="200" height="200" viewBox="0 0 200 200">
+                <circle cx="100" cy="100" r="85" fill="none" stroke="#1e293b" stroke-width="12"/>
+                <circle cx="100" cy="100" r="85" fill="none" stroke="url(#timerGrad)" stroke-width="12"
+                  stroke-linecap="round" stroke-dasharray="534" stroke-dashoffset="534" id="timerArc"
+                  transform="rotate(-90 100 100)"/>
+                <defs>
+                  <linearGradient id="timerGrad" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#7c3aed"/><stop offset="1" stop-color="#06b6d4"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div class="timer-center">
+                <div class="timer-time" id="timerDisplay">00:00</div>
+                <div class="timer-lbl" id="timerLabel">เวลาที่ใช้</div>
+              </div>
+            </div>
+
+            <div class="timer-controls">
+              <button class="tcbtn" onclick="resetTimer()" title="รีเซ็ต">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+              </button>
+              <button class="tcbtn tcbtn-play" onclick="toggleTimer()" id="timerBtn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="timerIcon"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </button>
+              <button class="tcbtn" onclick="startRest()" title="พักเบรก">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
+              </button>
+            </div>
+
+            <!-- Rest Timer -->
+            <div class="rest-bar" id="restBar" style="display:none">
+              <div class="rest-header">
+                <span>⏸ พักเบรก</span>
+                <span id="restCountdown">90s</span>
+              </div>
+              <div class="rest-progress"><div id="restFill" class="rest-fill"></div></div>
+            </div>
+
+            <!-- Exercise Checklist -->
+            <div class="session-exercises" id="sessionExercises"></div>
+
+            <!-- Re-assess button -->
+            <button class="btn-reassess" onclick="resetAssessment()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg>
+              ประเมินใหม่ตั้งแต่ต้น
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== PAGE: PROGRESS ===== -->
+    <section class="page" id="page-progress">
+      <div class="page-content">
+
+        <!-- Weight Chart -->
+        <div class="section-header"><h3>น้ำหนักตัว (kg)</h3><span class="goal-text">-3.2 kg</span></div>
+        <div class="chart-card">
+          <svg id="weightChart" width="100%" height="160" viewBox="0 0 600 160" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="wGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.5"/>
+                <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,120 Q60,115 100,112 Q160,108 200,100 Q260,90 300,88 Q360,85 400,80 Q460,75 500,70 Q550,65 600,60" fill="none" stroke="#7c3aed" stroke-width="3"/>
+            <path d="M0,120 Q60,115 100,112 Q160,108 200,100 Q260,90 300,88 Q360,85 400,80 Q460,75 500,70 Q550,65 600,60 L600,160 L0,160 Z" fill="url(#wGrad)"/>
+            <!-- Data points -->
+            <circle cx="100" cy="112" r="5" fill="#7c3aed"/><circle cx="200" cy="100" r="5" fill="#7c3aed"/>
+            <circle cx="300" cy="88" r="5" fill="#7c3aed"/><circle cx="400" cy="80" r="5" fill="#7c3aed"/>
+            <circle cx="500" cy="70" r="5" fill="#7c3aed"/><circle cx="600" cy="60" r="5" fill="#a78bfa"/>
+            <!-- Labels -->
+            <text x="100" y="145" text-anchor="middle" fill="#64748b" font-size="11">ก.พ.</text>
+            <text x="200" y="145" text-anchor="middle" fill="#64748b" font-size="11">มี.ค.</text>
+            <text x="300" y="145" text-anchor="middle" fill="#64748b" font-size="11">เม.ย. 1</text>
+            <text x="400" y="145" text-anchor="middle" fill="#64748b" font-size="11">เม.ย. 2</text>
+            <text x="500" y="145" text-anchor="middle" fill="#64748b" font-size="11">เม.ย. 3</text>
+            <text x="600" y="145" text-anchor="middle" fill="#64748b" font-size="11">วันนี้</text>
+          </svg>
+          <div class="chart-stats">
+            <div><span>เริ่มต้น</span><b>78.2 kg</b></div>
+            <div><span>ตอนนี้</span><b>75.0 kg</b></div>
+            <div><span>เป้าหมาย</span><b>72 kg</b></div>
+          </div>
+        </div>
+
+        <!-- Strength Progress -->
+        <div class="section-header"><h3>ความก้าวหน้าท่าหลัก</h3></div>
+        <div class="strength-cards">
+          <div class="strength-card">
+            <div class="sc-icon">🏋️</div>
+            <div class="sc-info"><span>Squat</span><div class="sc-prog"><div class="sc-bar" style="--pct:78%"></div></div></div>
+            <div class="sc-weight"><b>120 kg</b><small>+20 kg</small></div>
+          </div>
+          <div class="strength-card">
+            <div class="sc-icon">💪</div>
+            <div class="sc-info"><span>Bench Press</span><div class="sc-prog"><div class="sc-bar" style="--pct:65%"></div></div></div>
+            <div class="sc-weight"><b>90 kg</b><small>+15 kg</small></div>
+          </div>
+          <div class="strength-card">
+            <div class="sc-icon">⚡</div>
+            <div class="sc-info"><span>Deadlift</span><div class="sc-prog"><div class="sc-bar" style="--pct:88%"></div></div></div>
+            <div class="sc-weight"><b>140 kg</b><small>+25 kg</small></div>
+          </div>
+          <div class="strength-card">
+            <div class="sc-icon">🎯</div>
+            <div class="sc-info"><span>OHP</span><div class="sc-prog"><div class="sc-bar" style="--pct:52%"></div></div></div>
+            <div class="sc-weight"><b>60 kg</b><small>+10 kg</small></div>
+          </div>
+        </div>
+
+        <!-- Workout Calendar -->
+        <div class="section-header"><h3>ปฏิทินการเทรน — เม.ย. 2026</h3></div>
+        <div class="cal-card" id="calendarGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Personal Records -->
+        <div class="section-header"><h3>สถิติส่วนตัว (PR)</h3></div>
+        <div class="pr-grid">
+          <div class="pr-card"><div class="pr-emoji">🥇</div><div class="pr-val">120 kg</div><div class="pr-name">Squat 1RM</div><div class="pr-date">18 เม.ย.</div></div>
+          <div class="pr-card"><div class="pr-emoji">🥇</div><div class="pr-val">90 kg</div><div class="pr-name">Bench 1RM</div><div class="pr-date">12 เม.ย.</div></div>
+          <div class="pr-card"><div class="pr-emoji">🥇</div><div class="pr-val">140 kg</div><div class="pr-name">Deadlift 1RM</div><div class="pr-date">22 เม.ย.</div></div>
+          <div class="pr-card"><div class="pr-emoji">🥇</div><div class="pr-val">20 reps</div><div class="pr-name">Pull-up</div><div class="pr-date">15 เม.ย.</div></div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===== EXERCISE DETAIL MODAL ===== -->
+<div class="modal-overlay" id="exModal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeExModal()">✕</button>
+    <div class="modal-art" id="modalArt"></div>
+    <div class="modal-body">
+      <div class="modal-tags" id="modalTags"></div>
+      <h3 id="modalName"></h3>
+      <p id="modalDesc"></p>
+      <div class="modal-stats">
+        <div><span>กลุ่มกล้ามเนื้อ</span><b id="modalMuscle"></b></div>
+        <div><span>ระดับความยาก</span><b id="modalLevel"></b></div>
+        <div><span>อุปกรณ์</span><b id="modalEquip"></b></div>
+      </div>
+      <div class="modal-sets">
+        <h4>เซ็ตแนะนำ</h4>
+        <div id="modalSets"></div>
+      </div>
+      <button class="btn-primary full" onclick="addToWorkout()">+ เพิ่มในเซสชัน</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
