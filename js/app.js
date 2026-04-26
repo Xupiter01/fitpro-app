@@ -157,11 +157,11 @@ const EXERCISES = [
 ];
 
 const SESSION_EXERCISES = [
-  { name: 'Bench Press', sets: 4, reps: 8, weight: '80 kg', done: false },
-  { name: 'Overhead Press', sets: 3, reps: 10, weight: '50 kg', done: false },
-  { name: 'Incline Dumbbell Press', sets: 3, reps: 12, weight: '26 kg', done: false },
-  { name: 'Lateral Raise', sets: 4, reps: 15, weight: '10 kg', done: false },
-  { name: 'Tricep Pushdown', sets: 3, reps: 12, weight: '35 kg', done: false },
+  { name: 'Bench Press', sets: 4, reps: 8, weight: '—', done: false },
+  { name: 'Overhead Press', sets: 3, reps: 10, weight: '—', done: false },
+  { name: 'Incline Dumbbell Press', sets: 3, reps: 12, weight: '—', done: false },
+  { name: 'Lateral Raise', sets: 4, reps: 15, weight: '—', done: false },
+  { name: 'Tricep Pushdown', sets: 3, reps: 12, weight: '—', done: false },
 ];
 
 // ===== STATE =====
@@ -1418,8 +1418,8 @@ function startGeneratedPlan() {
 // ===== CALENDAR =====
 function renderCalendar() {
   const days = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
-  const workedDays = [1,2,3,5,7,8,9,10,12,14,15,16,17,19,21,22,23,24];
-  const restDays = [4,11,18,25];
+  const workedDays = [];
+  const restDays = [];
   const today = 26;
   let html = `<div class="cal-header">${days.map(d => `<div class="cal-dname">${d}</div>`).join('')}</div><div class="cal-grid">`;
   // April 2026 starts on Wednesday (index 3)

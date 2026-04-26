@@ -900,6 +900,24 @@ input[type="range"].rpe-slider::-webkit-slider-thumb {
 .assess-card.error .assess-card-header { border-left: 3px solid var(--red); }
 .input-field input.invalid { border-color: var(--red); }
 
+/* ===== EMPTY STATES ===== */
+.today-empty {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 12px; padding: 32px 20px; text-align: center;
+}
+.today-empty-icon { font-size: 2.4rem; }
+.today-empty-text { color: var(--text3); font-size: 0.9rem; }
+
+.empty-state-sm {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 8px; padding: 28px 16px; text-align: center; color: var(--text3);
+}
+.empty-state-sm span { font-size: 2rem; }
+.empty-state-sm p { font-size: 0.85rem; line-height: 1.6; }
+
+.chart-empty { display: flex; align-items: center; justify-content: center; min-height: 120px; }
+.pr-empty { border-radius: var(--radius); background: var(--card); }
+
 /* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
