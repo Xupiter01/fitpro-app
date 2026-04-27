@@ -472,78 +472,422 @@ function renderExercises(filter = 'all', query = '') {
 }
 
 function makeExerciseSVG(ex) {
+  // 3D-style figure: light body + green muscle highlight + motion arrow
+  const B = '#c8daea';                    // body/limb stroke
+  const F = 'rgba(180,210,230,0.22)';    // body fill
+  const M = '#22c55e';                    // muscle green
+  const MG = 'rgba(34,197,94,0.28)';     // muscle glow
+  const E = '#7a8fa8';                    // equipment
+  const A = '#16a34a';                    // arrow
+
+  // shared defs (gradient + filter for 3D feel)
+  const DEFS = `<defs>
+    <filter id="glow"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="limb" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(100,140,170,0.6)"/><stop offset="50%" stop-color="rgba(200,218,234,0.9)"/><stop offset="100%" stop-color="rgba(100,140,170,0.6)"/></linearGradient>
+  </defs>`;
+
+  // helper: arrow pointing up
+  const arrowUp = (x,y) => `<line x1="${x}" y1="${y+14}" x2="${x}" y2="${y+2}" stroke="${A}" stroke-width="2.5" stroke-dasharray="3,2" opacity="0.9"/><polygon points="${x-4},${y+2} ${x+4},${y+2} ${x},${y-4}" fill="${A}" opacity="0.9"/>`;
+
   const svgs = {
-    chest: `<svg width="110" height="110" viewBox="0 0 110 110" fill="none">
-      <circle cx="55" cy="28" r="14" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
-      <rect x="28" y="42" width="54" height="36" rx="10" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-      <ellipse cx="43" cy="58" rx="10" ry="7" fill="${ex.color}" opacity="0.6"/>
-      <ellipse cx="67" cy="58" rx="10" ry="7" fill="${ex.color}" opacity="0.6"/>
-      <path d="M28 50 Q10 52 4 62" stroke="rgba(255,255,255,0.5)" stroke-width="9" stroke-linecap="round"/>
-      <path d="M82 50 Q100 52 106 62" stroke="rgba(255,255,255,0.5)" stroke-width="9" stroke-linecap="round"/>
-      <rect x="0" y="58" width="8" height="8" rx="2" fill="rgba(255,255,255,0.3)"/>
-      <rect x="102" y="58" width="8" height="8" rx="2" fill="rgba(255,255,255,0.3)"/>
-      <text x="55" y="100" text-anchor="middle" font-size="24">${ex.emoji}</text>
-    </svg>`,
-    back: `<svg width="110" height="110" viewBox="0 0 110 110" fill="none">
-      <circle cx="55" cy="22" r="14" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
-      <path d="M38 36 Q25 55 28 76 Q55 85 82 76 Q85 55 72 36Z" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-      <path d="M38 36 Q28 55 30 72" stroke="${ex.color}" stroke-width="3" opacity="0.8"/>
-      <path d="M72 36 Q82 55 80 72" stroke="${ex.color}" stroke-width="3" opacity="0.8"/>
-      <ellipse cx="55" cy="55" rx="12" ry="18" fill="${ex.color}" opacity="0.35"/>
-      <line x1="46" y1="44" x2="64" y2="44" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-      <line x1="42" y1="53" x2="68" y2="53" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-      <line x1="44" y1="62" x2="66" y2="62" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-      <text x="55" y="100" text-anchor="middle" font-size="24">${ex.emoji}</text>
-    </svg>`,
-    legs: `<svg width="110" height="110" viewBox="0 0 110 110" fill="none">
-      <circle cx="55" cy="18" r="11" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
-      <rect x="35" y="30" width="40" height="26" rx="8" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-      <path d="M42 56 Q36 74 34 90" stroke="${ex.color}" stroke-width="12" stroke-linecap="round" opacity="0.7"/>
-      <path d="M42 56 Q36 74 34 90" stroke="rgba(255,255,255,0.15)" stroke-width="8" stroke-linecap="round"/>
-      <path d="M68 56 Q74 74 76 90" stroke="${ex.color}" stroke-width="12" stroke-linecap="round" opacity="0.7"/>
-      <path d="M68 56 Q74 74 76 90" stroke="rgba(255,255,255,0.15)" stroke-width="8" stroke-linecap="round"/>
-      <ellipse cx="32" cy="93" rx="10" ry="5" fill="rgba(255,255,255,0.2)"/>
-      <ellipse cx="78" cy="93" rx="10" ry="5" fill="rgba(255,255,255,0.2)"/>
-    </svg>`,
-    shoulders: `<svg width="110" height="110" viewBox="0 0 110 110" fill="none">
-      <circle cx="55" cy="25" r="13" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
-      <ellipse cx="30" cy="48" rx="16" ry="12" fill="${ex.color}" opacity="0.6" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-      <ellipse cx="80" cy="48" rx="16" ry="12" fill="${ex.color}" opacity="0.6" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-      <rect x="38" y="38" width="34" height="38" rx="8" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
-      <path d="M46 38 Q30 36 20 38" stroke="rgba(255,255,255,0.5)" stroke-width="9" stroke-linecap="round"/>
-      <path d="M64 38 Q80 36 90 38" stroke="rgba(255,255,255,0.5)" stroke-width="9" stroke-linecap="round"/>
-      <text x="55" y="100" text-anchor="middle" font-size="24">${ex.emoji}</text>
-    </svg>`,
-    arms: `<svg width="110" height="110" viewBox="0 0 110 110" fill="none">
-      <path d="M30 85 Q24 65 28 45 Q34 28 44 22 Q52 18 55 20" stroke="rgba(255,255,255,0.3)" stroke-width="16" stroke-linecap="round"/>
-      <path d="M30 85 Q24 65 28 45 Q34 28 44 22 Q52 18 55 20" stroke="${ex.color}" stroke-width="10" stroke-linecap="round" opacity="0.7"/>
-      <path d="M80 85 Q86 65 82 45 Q76 28 66 22 Q58 18 55 20" stroke="rgba(255,255,255,0.3)" stroke-width="16" stroke-linecap="round"/>
-      <path d="M80 85 Q86 65 82 45 Q76 28 66 22 Q58 18 55 20" stroke="${ex.color}" stroke-width="10" stroke-linecap="round" opacity="0.5"/>
-      <circle cx="55" cy="20" r="10" fill="${ex.color}" opacity="0.8"/>
-      <text x="55" y="105" text-anchor="middle" font-size="20">${ex.emoji}</text>
-    </svg>`,
-    core: `<svg width="110" height="110" viewBox="0 0 110 110" fill="none">
-      <circle cx="55" cy="20" r="12" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
-      <rect x="38" y="32" width="34" height="48" rx="10" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
-      <rect x="43" y="38" width="9" height="8" rx="2" fill="${ex.color}" opacity="0.7"/>
-      <rect x="58" y="38" width="9" height="8" rx="2" fill="${ex.color}" opacity="0.7"/>
-      <rect x="43" y="50" width="9" height="7" rx="2" fill="${ex.color}" opacity="0.55"/>
-      <rect x="58" y="50" width="9" height="7" rx="2" fill="${ex.color}" opacity="0.55"/>
-      <rect x="43" y="61" width="9" height="7" rx="2" fill="${ex.color}" opacity="0.4"/>
-      <rect x="58" y="61" width="9" height="7" rx="2" fill="${ex.color}" opacity="0.4"/>
-      <text x="55" y="102" text-anchor="middle" font-size="20">${ex.emoji}</text>
-    </svg>`,
-    cardio: `<svg width="110" height="110" viewBox="0 0 110 110" fill="none">
-      <circle cx="55" cy="20" r="12" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
-      <path d="M46 32 Q36 48 30 58" stroke="rgba(255,255,255,0.3)" stroke-width="12" stroke-linecap="round"/>
-      <path d="M64 32 Q74 48 80 58" stroke="rgba(255,255,255,0.2)" stroke-width="11" stroke-linecap="round"/>
-      <path d="M38 50 Q30 65 32 80" stroke="${ex.color}" stroke-width="12" stroke-linecap="round" opacity="0.8"/>
-      <path d="M72 50 Q80 65 78 80" stroke="${ex.color}" stroke-width="10" stroke-linecap="round" opacity="0.6"/>
-      <path d="M8 70 Q30 68 50 72 Q70 76 92 70 Q100 68 106 72" stroke="${ex.color}" stroke-width="2" opacity="0.5" stroke-dasharray="4 3"/>
-      <text x="55" y="106" text-anchor="middle" font-size="22">${ex.emoji}</text>
-    </svg>`,
+
+    // ── BENCH PRESS ──────────────────────────────────────────
+    1: `${DEFS}
+      <rect x="8" y="65" width="94" height="10" rx="5" fill="rgba(100,130,160,0.3)" stroke="${E}" stroke-width="1.5"/>
+      <rect x="18" y="75" width="5" height="18" rx="2" fill="${E}" opacity="0.45"/>
+      <rect x="87" y="75" width="5" height="18" rx="2" fill="${E}" opacity="0.45"/>
+      <circle cx="15" cy="53" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M22,58 L82,58 Q88,58 88,53 Q88,48 82,48 L22,48 Q17,48 17,53 Q17,58 22,58Z" fill="${F}" stroke="${B}" stroke-width="1.5"/>
+      <ellipse cx="42" cy="53" rx="12" ry="7" fill="${MG}" filter="url(#glow)"/>
+      <ellipse cx="42" cy="53" rx="10" ry="5.5" fill="${M}" opacity="0.9"/>
+      <ellipse cx="63" cy="53" rx="12" ry="7" fill="${MG}" filter="url(#glow)"/>
+      <ellipse cx="63" cy="53" rx="10" ry="5.5" fill="${M}" opacity="0.9"/>
+      <path d="M42,48 L40,24" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M63,48 L65,24" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <line x1="16" y1="22" x2="94" y2="22" stroke="${E}" stroke-width="3.5" stroke-linecap="round"/>
+      <rect x="12" y="15" width="6" height="14" rx="2" fill="${E}" opacity="0.75"/>
+      <rect x="92" y="15" width="6" height="14" rx="2" fill="${E}" opacity="0.75"/>
+      <path d="M83,53 Q92,58 95,65" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M95,65 Q99,74 98,86" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      ${arrowUp(53,22)}`,
+
+    // ── INCLINE DUMBBELL PRESS ────────────────────────────────
+    2: `${DEFS}
+      <path d="M6,102 L88,24" stroke="${E}" stroke-width="7" stroke-linecap="round" opacity="0.38"/>
+      <circle cx="20" cy="18" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M26,25 Q53,53 77,70" stroke="${B}" stroke-width="14" stroke-linecap="round"/>
+      <path d="M26,25 Q53,46 74,62" stroke="${MG}" stroke-width="12" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M26,25 Q53,46 74,62" stroke="${M}" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+      <path d="M31,22 L19,10" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M45,33 L35,20" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <line x1="12" y1="9" x2="26" y2="9" stroke="${E}" stroke-width="3"/>
+      <circle cx="10" cy="9" r="4.5" fill="${E}" opacity="0.7"/><circle cx="28" cy="9" r="4.5" fill="${E}" opacity="0.7"/>
+      <line x1="28" y1="19" x2="42" y2="19" stroke="${E}" stroke-width="3"/>
+      <circle cx="26" cy="19" r="4.5" fill="${E}" opacity="0.7"/><circle cx="44" cy="19" r="4.5" fill="${E}" opacity="0.7"/>
+      <path d="M77,70 Q87,78 93,90" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M93,90 Q97,100 96,110" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <polygon points="15,7 21,15 9,15" fill="${A}" opacity="0.9"/>
+      <polygon points="31,17 37,25 25,25" fill="${A}" opacity="0.9"/>`,
+
+    // ── CABLE FLYES ───────────────────────────────────────────
+    3: `${DEFS}
+      <circle cx="55" cy="10" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <rect x="47" y="19" width="16" height="32" rx="7" fill="${F}" stroke="${B}" stroke-width="1.5"/>
+      <ellipse cx="42" cy="32" rx="13" ry="8" fill="${MG}" filter="url(#glow)"/>
+      <ellipse cx="42" cy="32" rx="11" ry="6.5" fill="${M}" opacity="0.9"/>
+      <ellipse cx="68" cy="32" rx="13" ry="8" fill="${MG}" filter="url(#glow)"/>
+      <ellipse cx="68" cy="32" rx="11" ry="6.5" fill="${M}" opacity="0.9"/>
+      <path d="M47,24 Q28,28 12,24" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M63,24 Q82,28 98,24" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="11" cy="24" r="5.5" fill="${E}" opacity="0.8"/><circle cx="99" cy="24" r="5.5" fill="${E}" opacity="0.8"/>
+      <path d="M49,51 Q43,66 41,84" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M61,51 Q67,66 69,84" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M41,84 Q39,96 38,108" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M69,84 Q71,96 72,108" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M20,24 L44,34" stroke="${A}" stroke-width="2.5" stroke-dasharray="4,2" opacity="0.85"/>
+      <path d="M90,24 L66,34" stroke="${A}" stroke-width="2.5" stroke-dasharray="4,2" opacity="0.85"/>
+      <polygon points="41,30 48,36 38,38" fill="${A}" opacity="0.85"/>
+      <polygon points="69,30 62,36 72,38" fill="${A}" opacity="0.85"/>`,
+
+    // ── PULL-UP ───────────────────────────────────────────────
+    4: `${DEFS}
+      <line x1="4" y1="6" x2="106" y2="6" stroke="${E}" stroke-width="5.5" stroke-linecap="round"/>
+      <rect x="2" y="2" width="10" height="16" rx="3" fill="${E}" opacity="0.5"/><rect x="98" y="2" width="10" height="16" rx="3" fill="${E}" opacity="0.5"/>
+      <path d="M42,8 L46,26" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M68,8 L64,26" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="55" cy="35" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M46,42 Q36,50 36,60" stroke="${B}" stroke-width="14" stroke-linecap="round"/>
+      <path d="M64,42 Q74,50 74,60" stroke="${B}" stroke-width="14" stroke-linecap="round"/>
+      <path d="M46,42 Q36,50 36,60" stroke="${MG}" stroke-width="11" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M64,42 Q74,50 74,60" stroke="${MG}" stroke-width="11" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M46,42 Q36,50 36,60" stroke="${M}" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
+      <path d="M64,42 Q74,50 74,60" stroke="${M}" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
+      <path d="M36,60 Q40,72 43,82" stroke="${B}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M74,60 Q70,72 67,82" stroke="${B}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M43,82 Q46,94 48,106" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M67,82 Q64,94 62,106" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      ${arrowUp(55,18)}`,
+
+    // ── BARBELL ROW ───────────────────────────────────────────
+    5: `${DEFS}
+      <circle cx="78" cy="14" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M72,20 Q58,34 44,50" stroke="${B}" stroke-width="14" stroke-linecap="round"/>
+      <path d="M72,20 Q58,34 44,50" stroke="${MG}" stroke-width="12" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M72,20 Q58,34 44,50" stroke="${M}" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
+      <path d="M66,18 Q56,36 50,54" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M84,18 Q76,36 72,54" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <line x1="14" y1="60" x2="90" y2="60" stroke="${E}" stroke-width="3.5" stroke-linecap="round"/>
+      <rect x="10" y="53" width="6" height="14" rx="2" fill="${E}" opacity="0.75"/><rect x="88" y="53" width="6" height="14" rx="2" fill="${E}" opacity="0.75"/>
+      <path d="M44,50 Q36,66 32,82" stroke="${B}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M52,54 Q52,70 54,84" stroke="${B}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M32,82 Q29,94 30,108" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M54,84 Q56,96 56,108" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M66,52 L66,40" stroke="${A}" stroke-width="2.5" stroke-dasharray="3,2" opacity="0.9"/>
+      <polygon points="62,39 70,39 66,33" fill="${A}" opacity="0.9"/>`,
+
+    // ── LAT PULLDOWN ──────────────────────────────────────────
+    6: `${DEFS}
+      <line x1="4" y1="5" x2="106" y2="5" stroke="${E}" stroke-width="4" stroke-linecap="round"/>
+      <line x1="55" y1="5" x2="55" y2="18" stroke="${E}" stroke-width="2.5"/>
+      <line x1="36" y1="18" x2="74" y2="18" stroke="${E}" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="55" cy="36" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M46,43 Q36,35 36,18" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M64,43 Q74,35 74,18" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M46,45 Q36,54 36,64" stroke="${B}" stroke-width="14" stroke-linecap="round"/>
+      <path d="M64,45 Q74,54 74,64" stroke="${B}" stroke-width="14" stroke-linecap="round"/>
+      <path d="M46,45 Q36,54 36,64" stroke="${MG}" stroke-width="11" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M64,45 Q74,54 74,64" stroke="${MG}" stroke-width="11" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M46,45 Q36,54 36,64" stroke="${M}" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
+      <path d="M64,45 Q74,54 74,64" stroke="${M}" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
+      <rect x="43" y="64" width="24" height="8" rx="4" fill="${F}" stroke="${B}" stroke-width="1.5"/>
+      <path d="M45,72 Q38,84 36,96" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M65,72 Q72,84 74,96" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M36,96 Q34,104 35,110" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M74,96 Q76,104 75,110" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <line x1="55" y1="28" x2="55" y2="42" stroke="${A}" stroke-width="2.5" stroke-dasharray="3,2" opacity="0.9"/>
+      <polygon points="51,43 59,43 55,49" fill="${A}" opacity="0.9"/>`,
+
+    // ── BARBELL SQUAT ─────────────────────────────────────────
+    7: `${DEFS}
+      <line x1="18" y1="36" x2="92" y2="36" stroke="${E}" stroke-width="3.5" stroke-linecap="round"/>
+      <rect x="14" y="28" width="6" height="16" rx="2" fill="${E}" opacity="0.75"/><rect x="90" y="28" width="6" height="16" rx="2" fill="${E}" opacity="0.75"/>
+      <circle cx="55" cy="24" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M46,36 L38,52" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M64,36 L72,52" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <rect x="46" y="36" width="18" height="24" rx="7" fill="${F}" stroke="${B}" stroke-width="1.5"/>
+      <path d="M48,60 Q40,74 34,88" stroke="${B}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M62,60 Q70,74 76,88" stroke="${B}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M48,60 Q40,74 34,88" stroke="${MG}" stroke-width="10" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M62,60 Q70,74 76,88" stroke="${MG}" stroke-width="10" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M48,60 Q40,74 34,88" stroke="${M}" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+      <path d="M62,60 Q70,74 76,88" stroke="${M}" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+      <ellipse cx="55" cy="55" rx="10" ry="6" fill="${M}" opacity="0.6"/>
+      <path d="M34,88 Q30,98 32,108" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M76,88 Q80,98 78,108" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      ${arrowUp(55,20)}`,
+
+    // ── ROMANIAN DEADLIFT ─────────────────────────────────────
+    8: `${DEFS}
+      <circle cx="76" cy="12" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M70,18 Q56,32 44,50" stroke="${B}" stroke-width="14" stroke-linecap="round"/>
+      <path d="M70,18 Q56,32 44,50" stroke="${MG}" stroke-width="12" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M70,18 Q56,32 44,50" stroke="${M}" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
+      <path d="M64,16 Q58,34 54,52" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M82,14 Q80,32 78,52" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <line x1="14" y1="56" x2="90" y2="56" stroke="${E}" stroke-width="3.5" stroke-linecap="round"/>
+      <rect x="10" y="49" width="6" height="14" rx="2" fill="${E}" opacity="0.75"/><rect x="88" y="49" width="6" height="14" rx="2" fill="${E}" opacity="0.75"/>
+      <path d="M44,50 Q38,66 36,84" stroke="${B}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M52,52 Q52,70 52,86" stroke="${B}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M44,50 Q38,66 36,84" stroke="${MG}" stroke-width="9" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M44,50 Q38,66 36,84" stroke="${M}" stroke-width="5" stroke-linecap="round" opacity="0.75"/>
+      <path d="M36,84 Q34,96 36,108" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M52,86 Q52,96 52,108" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M62,48 L62,34" stroke="${A}" stroke-width="2.5" stroke-dasharray="3,2" opacity="0.9"/>
+      <polygon points="58,33 66,33 62,27" fill="${A}" opacity="0.9"/>`,
+
+    // ── LEG PRESS ─────────────────────────────────────────────
+    9: `${DEFS}
+      <rect x="52" y="4" width="54" height="52" rx="8" fill="rgba(100,130,160,0.15)" stroke="${E}" stroke-width="1.5"/>
+      <rect x="52" y="4" width="54" height="16" rx="5" fill="${E}" opacity="0.3"/>
+      <circle cx="22" cy="82" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M14,76 Q10,62 16,48" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M30,76 Q34,62 40,48" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M16,48 Q34,38 56,30" stroke="${B}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M40,48 Q54,40 66,34" stroke="${B}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M16,48 Q34,38 56,30" stroke="${MG}" stroke-width="10" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M40,48 Q54,40 66,34" stroke="${MG}" stroke-width="10" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M16,48 Q34,38 56,30" stroke="${M}" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+      <path d="M40,48 Q54,40 66,34" stroke="${M}" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+      <path d="M22,72 Q16,62 14,50" stroke="${B}" stroke-width="6" stroke-linecap="round"/>
+      <path d="M22,72 L22,88 L14,96" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M66,30 L66,20" stroke="${A}" stroke-width="2.5" stroke-dasharray="3,2" opacity="0.9"/>
+      <polygon points="62,19 70,19 66,13" fill="${A}" opacity="0.9"/>`,
+
+    // ── OVERHEAD PRESS ────────────────────────────────────────
+    10: `${DEFS}
+      <line x1="20" y1="28" x2="90" y2="28" stroke="${E}" stroke-width="3.5" stroke-linecap="round"/>
+      <rect x="16" y="20" width="6" height="16" rx="2" fill="${E}" opacity="0.75"/><rect x="88" y="20" width="6" height="16" rx="2" fill="${E}" opacity="0.75"/>
+      <circle cx="55" cy="40" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M46,46 L28,28" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M64,46 L82,28" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <ellipse cx="28" cy="48" rx="10" ry="7" fill="${MG}" filter="url(#glow)"/>
+      <ellipse cx="28" cy="48" rx="8.5" ry="6" fill="${M}" opacity="0.9"/>
+      <ellipse cx="82" cy="48" rx="10" ry="7" fill="${MG}" filter="url(#glow)"/>
+      <ellipse cx="82" cy="48" rx="8.5" ry="6" fill="${M}" opacity="0.9"/>
+      <path d="M46,49 Q36,52 28,50" stroke="${B}" stroke-width="14" stroke-linecap="round"/>
+      <path d="M64,49 Q74,52 82,50" stroke="${B}" stroke-width="14" stroke-linecap="round"/>
+      <rect x="47" y="49" width="16" height="24" rx="7" fill="${F}" stroke="${B}" stroke-width="1.5"/>
+      <path d="M49,73 Q43,86 41,100" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M61,73 Q67,86 69,100" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M41,100 Q39,106 40,110" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M69,100 Q71,106 70,110" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      ${arrowUp(55,22)}`,
+
+    // ── LATERAL RAISE ─────────────────────────────────────────
+    11: `${DEFS}
+      <circle cx="55" cy="10" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <rect x="47" y="19" width="16" height="32" rx="7" fill="${F}" stroke="${B}" stroke-width="1.5"/>
+      <ellipse cx="28" cy="30" rx="11" ry="7.5" fill="${MG}" filter="url(#glow)"/>
+      <ellipse cx="28" cy="30" rx="9.5" ry="6.5" fill="${M}" opacity="0.9"/>
+      <ellipse cx="82" cy="30" rx="11" ry="7.5" fill="${MG}" filter="url(#glow)"/>
+      <ellipse cx="82" cy="30" rx="9.5" ry="6.5" fill="${M}" opacity="0.9"/>
+      <path d="M47,22 Q36,26 28,30" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M63,22 Q74,26 82,30" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M47,22 Q36,24 26,26" stroke="${M}" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+      <path d="M63,22 Q74,24 84,26" stroke="${M}" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+      <path d="M28,30 Q18,34 11,32" stroke="${B}" stroke-width="7" stroke-linecap="round"/>
+      <path d="M82,30 Q92,34 99,32" stroke="${B}" stroke-width="7" stroke-linecap="round"/>
+      <circle cx="9" cy="32" r="5.5" fill="${E}" opacity="0.8"/><circle cx="101" cy="32" r="5.5" fill="${E}" opacity="0.8"/>
+      <path d="M49,51 Q43,66 41,82" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M61,51 Q67,66 69,82" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M41,82 Q39,94 40,108" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M69,82 Q71,94 70,108" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <line x1="16" y1="28" x2="24" y2="18" stroke="${A}" stroke-width="2.5" stroke-dasharray="3,2" opacity="0.85"/>
+      <line x1="94" y1="28" x2="86" y2="18" stroke="${A}" stroke-width="2.5" stroke-dasharray="3,2" opacity="0.85"/>
+      <polygon points="22,14 28,20 20,22" fill="${A}" opacity="0.85"/>
+      <polygon points="88,14 82,20 90,22" fill="${A}" opacity="0.85"/>`,
+
+    // ── FACE PULL ─────────────────────────────────────────────
+    12: `${DEFS}
+      <circle cx="55" cy="10" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M47,20 Q38,28 38,38" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M63,20 Q72,28 72,38" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <ellipse cx="38" cy="34" rx="10" ry="7" fill="${MG}" filter="url(#glow)"/>
+      <ellipse cx="38" cy="34" rx="8.5" ry="6" fill="${M}" opacity="0.9"/>
+      <ellipse cx="72" cy="34" rx="10" ry="7" fill="${MG}" filter="url(#glow)"/>
+      <ellipse cx="72" cy="34" rx="8.5" ry="6" fill="${M}" opacity="0.9"/>
+      <path d="M38,38 Q26,40 14,36" stroke="${B}" stroke-width="7" stroke-linecap="round"/>
+      <path d="M72,38 Q84,40 96,36" stroke="${B}" stroke-width="7" stroke-linecap="round"/>
+      <line x1="6" y1="20" x2="14" y2="36" stroke="${E}" stroke-width="2.5" stroke-dasharray="4,2" opacity="0.55"/>
+      <line x1="104" y1="20" x2="96" y2="36" stroke="${E}" stroke-width="2.5" stroke-dasharray="4,2" opacity="0.55"/>
+      <rect x="47" y="19" width="16" height="34" rx="7" fill="${F}" stroke="${B}" stroke-width="1.5"/>
+      <path d="M49,53 Q43,66 41,82" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M61,53 Q67,66 69,82" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M41,82 Q39,94 40,108" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M69,82 Q71,94 70,108" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M26,36 L40,32" stroke="${A}" stroke-width="2.5" stroke-dasharray="3,2" opacity="0.85"/>
+      <path d="M84,36 L70,32" stroke="${A}" stroke-width="2.5" stroke-dasharray="3,2" opacity="0.85"/>`,
+
+    // ── BARBELL CURL ──────────────────────────────────────────
+    13: `${DEFS}
+      <circle cx="55" cy="10" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M47,20 Q40,30 38,42" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M63,20 Q70,30 72,42" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M47,20 Q40,30 38,42" stroke="${MG}" stroke-width="7" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M63,20 Q70,30 72,42" stroke="${MG}" stroke-width="7" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M47,20 Q40,30 38,42" stroke="${M}" stroke-width="5" stroke-linecap="round" opacity="0.9"/>
+      <path d="M63,20 Q70,30 72,42" stroke="${M}" stroke-width="5" stroke-linecap="round" opacity="0.9"/>
+      <path d="M38,42 Q34,54 34,64" stroke="${B}" stroke-width="7" stroke-linecap="round"/>
+      <path d="M72,42 Q76,54 76,64" stroke="${B}" stroke-width="7" stroke-linecap="round"/>
+      <line x1="28" y1="64" x2="82" y2="64" stroke="${E}" stroke-width="3.5" stroke-linecap="round"/>
+      <rect x="24" y="57" width="6" height="14" rx="2" fill="${E}" opacity="0.75"/><rect x="80" y="57" width="6" height="14" rx="2" fill="${E}" opacity="0.75"/>
+      <rect x="47" y="19" width="16" height="34" rx="7" fill="${F}" stroke="${B}" stroke-width="1.5"/>
+      <path d="M49,53 Q44,68 42,82" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M61,53 Q66,68 68,82" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M42,82 Q40,94 40,108" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M68,82 Q70,94 70,108" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M38,50 L38,36" stroke="${A}" stroke-width="2.5" stroke-dasharray="3,2" opacity="0.9"/>
+      <path d="M72,50 L72,36" stroke="${A}" stroke-width="2.5" stroke-dasharray="3,2" opacity="0.9"/>
+      <polygon points="34,35 42,35 38,29" fill="${A}" opacity="0.9"/>
+      <polygon points="68,35 76,35 72,29" fill="${A}" opacity="0.9"/>`,
+
+    // ── SKULL CRUSHER ─────────────────────────────────────────
+    14: `${DEFS}
+      <rect x="8" y="65" width="94" height="10" rx="5" fill="rgba(100,130,160,0.3)" stroke="${E}" stroke-width="1.5"/>
+      <rect x="18" y="75" width="5" height="18" rx="2" fill="${E}" opacity="0.45"/><rect x="87" y="75" width="5" height="18" rx="2" fill="${E}" opacity="0.45"/>
+      <circle cx="15" cy="53" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M22,58 L82,58 Q88,58 88,53 Q88,48 82,48 L22,48 Q17,48 17,53 Q17,58 22,58Z" fill="${F}" stroke="${B}" stroke-width="1.5"/>
+      <path d="M43,48 L45,26" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M63,48 L61,26" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M45,26 Q53,20 61,26" stroke="${B}" stroke-width="7" stroke-linecap="round"/>
+      <path d="M43,48 L45,26" stroke="${MG}" stroke-width="6" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M63,48 L61,26" stroke="${MG}" stroke-width="6" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M45,26 Q53,20 61,26" stroke="${MG}" stroke-width="6" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M43,48 L45,26" stroke="${M}" stroke-width="4.5" stroke-linecap="round" opacity="0.9"/>
+      <path d="M63,48 L61,26" stroke="${M}" stroke-width="4.5" stroke-linecap="round" opacity="0.9"/>
+      <path d="M45,26 Q53,20 61,26" stroke="${M}" stroke-width="4.5" stroke-linecap="round" opacity="0.9"/>
+      <line x1="28" y1="22" x2="72" y2="22" stroke="${E}" stroke-width="3.5" stroke-linecap="round"/>
+      <rect x="24" y="15" width="6" height="14" rx="2" fill="${E}" opacity="0.75"/><rect x="70" y="15" width="6" height="14" rx="2" fill="${E}" opacity="0.75"/>
+      <path d="M83,53 Q92,58 95,65" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M95,65 Q99,74 98,86" stroke="${B}" stroke-width="8" stroke-linecap="round"/>`,
+
+    // ── HAMMER CURL ───────────────────────────────────────────
+    15: `${DEFS}
+      <circle cx="55" cy="10" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <rect x="47" y="19" width="16" height="32" rx="7" fill="${F}" stroke="${B}" stroke-width="1.5"/>
+      <path d="M47,22 Q40,32 38,44" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M63,22 Q68,34 68,48" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M47,22 Q40,32 38,44" stroke="${MG}" stroke-width="7" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M47,22 Q40,32 38,44" stroke="${M}" stroke-width="4.5" stroke-linecap="round" opacity="0.9"/>
+      <path d="M38,44 Q34,56 34,66" stroke="${B}" stroke-width="7" stroke-linecap="round"/>
+      <path d="M68,48 Q72,58 72,68" stroke="${B}" stroke-width="7" stroke-linecap="round"/>
+      <line x1="31" y1="60" x2="31" y2="76" stroke="${E}" stroke-width="3"/>
+      <circle cx="31" cy="57" r="5" fill="${E}" opacity="0.75"/><circle cx="31" cy="79" r="5" fill="${E}" opacity="0.75"/>
+      <line x1="75" y1="62" x2="75" y2="74" stroke="${E}" stroke-width="3"/>
+      <circle cx="75" cy="59" r="5" fill="${E}" opacity="0.75"/><circle cx="75" cy="77" r="5" fill="${E}" opacity="0.75"/>
+      <path d="M49,51 Q44,66 42,82" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M61,51 Q66,66 68,82" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M42,82 Q40,94 40,108" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M68,82 Q70,94 70,108" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M38,52 L38,38" stroke="${A}" stroke-width="2.5" stroke-dasharray="3,2" opacity="0.9"/>
+      <polygon points="34,37 42,37 38,31" fill="${A}" opacity="0.9"/>`,
+
+    // ── PLANK ─────────────────────────────────────────────────
+    16: `${DEFS}
+      <line x1="5" y1="102" x2="105" y2="102" stroke="rgba(148,163,184,0.35)" stroke-width="3"/>
+      <circle cx="14" cy="72" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M22,76 L95,76 Q101,76 101,71 Q101,66 95,66 L22,66 Q17,66 17,71 Q17,76 22,76Z" fill="${F}" stroke="${B}" stroke-width="1.5"/>
+      <ellipse cx="58" cy="71" rx="28" ry="7" fill="${MG}" filter="url(#glow)"/>
+      <path d="M28,71 L86,71" stroke="${M}" stroke-width="7" stroke-linecap="round" opacity="0.85"/>
+      <path d="M22,76 L10,90 L10,102" stroke="${B}" stroke-width="9" stroke-linecap="round"/>
+      <path d="M36,76 L32,90 L28,102" stroke="${B}" stroke-width="9" stroke-linecap="round"/>
+      <path d="M10,90 L32,90" stroke="${B}" stroke-width="7" stroke-linecap="round"/>
+      <path d="M90,76 Q98,90 102,102" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M82,76 Q88,90 90,102" stroke="${B}" stroke-width="9" stroke-linecap="round"/>`,
+
+    // ── CABLE CRUNCH ──────────────────────────────────────────
+    17: `${DEFS}
+      <line x1="4" y1="5" x2="106" y2="5" stroke="${E}" stroke-width="4" stroke-linecap="round"/>
+      <line x1="55" y1="5" x2="55" y2="22" stroke="${E}" stroke-width="2.5" stroke-dasharray="4,2" opacity="0.6"/>
+      <circle cx="40" cy="66" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M40,56 Q44,44 52,32" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M40,56 L28,50 L24,38" stroke="${B}" stroke-width="7" stroke-linecap="round"/>
+      <path d="M40,56 L52,50 L54,38" stroke="${B}" stroke-width="7" stroke-linecap="round"/>
+      <path d="M24,38 Q30,30 38,22" stroke="${B}" stroke-width="6" stroke-linecap="round"/>
+      <path d="M54,38 Q56,30 55,22" stroke="${B}" stroke-width="6" stroke-linecap="round"/>
+      <path d="M40,56 Q37,68 37,80" stroke="${B}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M40,56 Q37,64 37,74" stroke="${MG}" stroke-width="10" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M40,56 Q37,64 37,74" stroke="${M}" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+      <path d="M37,80 Q34,92 36,104" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M49,80 Q52,92 52,104" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M36,104 L26,108" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M52,104 L62,108" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <line x1="53" y1="26" x2="53" y2="12" stroke="${A}" stroke-width="2.5" stroke-dasharray="3,2" opacity="0.8"/>`,
+
+    // ── HANGING LEG RAISE ─────────────────────────────────────
+    18: `${DEFS}
+      <line x1="4" y1="6" x2="106" y2="6" stroke="${E}" stroke-width="5.5" stroke-linecap="round"/>
+      <rect x="2" y="2" width="10" height="16" rx="3" fill="${E}" opacity="0.5"/><rect x="98" y="2" width="10" height="16" rx="3" fill="${E}" opacity="0.5"/>
+      <path d="M42,8 L46,26" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M68,8 L64,26" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="55" cy="35" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M46,42 Q36,50 36,60" stroke="${B}" stroke-width="14" stroke-linecap="round"/>
+      <path d="M64,42 Q74,50 74,60" stroke="${B}" stroke-width="14" stroke-linecap="round"/>
+      <path d="M36,60 Q42,72 46,82" stroke="${B}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M74,60 Q68,72 64,82" stroke="${B}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M46,82 Q52,96 54,108" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M64,82 Q58,96 56,108" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M46,82 Q52,96 54,108" stroke="${MG}" stroke-width="8" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M64,82 Q58,96 56,108" stroke="${MG}" stroke-width="8" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M46,82 Q52,96 54,108" stroke="${M}" stroke-width="5" stroke-linecap="round" opacity="0.9"/>
+      <path d="M64,82 Q58,96 56,108" stroke="${M}" stroke-width="5" stroke-linecap="round" opacity="0.9"/>
+      <ellipse cx="55" cy="92" rx="14" ry="8" fill="${M}" opacity="0.35"/>
+      ${arrowUp(55,74)}`,
+
+    // ── HIIT SPRINT ───────────────────────────────────────────
+    19: `${DEFS}
+      <line x1="4" y1="106" x2="106" y2="106" stroke="rgba(148,163,184,0.3)" stroke-width="3"/>
+      <circle cx="52" cy="10" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <path d="M44,18 Q32,28 22,26" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M60,18 Q72,36 78,46" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <rect x="43" y="18" width="16" height="24" rx="7" fill="${F}" stroke="${B}" stroke-width="1.5"/>
+      <path d="M45,42 Q38,58 28,70" stroke="${B}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M57,42 Q64,56 74,66" stroke="${B}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M45,42 Q38,58 28,70" stroke="${MG}" stroke-width="9" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M57,42 Q64,56 74,66" stroke="${MG}" stroke-width="9" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M45,42 Q38,58 28,70" stroke="${M}" stroke-width="5.5" stroke-linecap="round" opacity="0.9"/>
+      <path d="M57,42 Q64,56 74,66" stroke="${M}" stroke-width="5.5" stroke-linecap="round" opacity="0.9"/>
+      <path d="M28,70 Q22,84 20,98" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M74,66 Q80,80 82,94" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M74,66 Q80,80 82,94" stroke="${MG}" stroke-width="8" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M74,66 Q80,80 82,94" stroke="${M}" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+      <path d="M62,38 L74,22" stroke="${A}" stroke-width="2.5" stroke-dasharray="3,2" opacity="0.8"/>
+      <polygon points="72,18 78,26 66,26" fill="${A}" opacity="0.8"/>`,
+
+    // ── JUMP ROPE ─────────────────────────────────────────────
+    20: `${DEFS}
+      <line x1="4" y1="106" x2="106" y2="106" stroke="rgba(148,163,184,0.3)" stroke-width="3"/>
+      <path d="M10,98 Q32,110 55,110 Q78,110 100,98" stroke="${E}" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <circle cx="55" cy="10" r="9" fill="${F}" stroke="${B}" stroke-width="2"/>
+      <rect x="47" y="19" width="16" height="24" rx="7" fill="${F}" stroke="${B}" stroke-width="1.5"/>
+      <path d="M47,22 Q38,30 30,34" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <path d="M63,22 Q72,30 80,34" stroke="${B}" stroke-width="8" stroke-linecap="round"/>
+      <line x1="28" y1="34" x2="28" y2="68" stroke="${E}" stroke-width="2.5" stroke-dasharray="4,2" opacity="0.5"/>
+      <line x1="82" y1="34" x2="82" y2="68" stroke="${E}" stroke-width="2.5" stroke-dasharray="4,2" opacity="0.5"/>
+      <path d="M49,43 Q43,58 41,72" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M61,43 Q67,58 69,72" stroke="${B}" stroke-width="10" stroke-linecap="round"/>
+      <path d="M41,72 Q37,84 38,96" stroke="${B}" stroke-width="9" stroke-linecap="round"/>
+      <path d="M69,72 Q73,84 72,96" stroke="${B}" stroke-width="9" stroke-linecap="round"/>
+      <path d="M41,72 Q37,84 38,96" stroke="${MG}" stroke-width="7" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M69,72 Q73,84 72,96" stroke="${MG}" stroke-width="7" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M41,72 Q37,84 38,96" stroke="${M}" stroke-width="4.5" stroke-linecap="round" opacity="0.9"/>
+      <path d="M69,72 Q73,84 72,96" stroke="${M}" stroke-width="4.5" stroke-linecap="round" opacity="0.9"/>
+      ${arrowUp(55,28)}`,
   };
-  return svgs[ex.group] || `<div style="font-size:3rem">${ex.emoji}</div>`;
+
+  const content = svgs[ex.id];
+  if (!content) return `<div style="font-size:2.8rem;text-align:center;padding-top:30px">${ex.emoji}</div>`;
+  return `<svg width="110" height="110" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">${content}</svg>`;
 }
 
 function groupLabel(g) {
