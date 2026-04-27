@@ -6,6 +6,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // ===== DATA =====
+const IMG_BASE = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
 const EXERCISES = [
   // CHEST
   {
@@ -14,6 +15,7 @@ const EXERCISES = [
     desc: 'ท่าคลาสสิกสำหรับพัฒนากล้ามเนื้อหน้าอกส่วนกลาง ช่วยเพิ่มทั้งความแข็งแรงและมวลกล้ามเนื้อ เหมาะสำหรับทุกระดับ',
     sets: [{label:'Warm-up',val:'2 × 15 @ 40%'},{label:'Working',val:'4 × 8 @ 75%'},{label:'Drop set',val:'1 × Failure'}],
     color: '#7c3aed', emoji: '🏋️', grad: 'linear-gradient(135deg,#3b0764,#1e1b4b)',
+    img: IMG_BASE + 'Barbell_Bench_Press_-_Medium_Grip/0.jpg',
   },
   {
     id: 2, name: 'Incline Dumbbell Press', group: 'chest', level: 'ปานกลาง', equip: 'ดัมเบล',
@@ -21,6 +23,7 @@ const EXERCISES = [
     desc: 'เน้นพัฒนาหน้าอกส่วนบน ให้รูปทรงหน้าอกที่เต็มและนูนสวยงาม ควบคู่กับการฝึก Bench Press ปกติ',
     sets: [{label:'Set 1',val:'3 × 12'},{label:'Set 2',val:'3 × 10'},{label:'Set 3',val:'3 × 8'}],
     color: '#7c3aed', emoji: '💪', grad: 'linear-gradient(135deg,#2d1b69,#0c0a1e)',
+    img: IMG_BASE + 'Barbell_Incline_Bench_Press_-_Medium_Grip/0.jpg',
   },
   {
     id: 3, name: 'Cable Flyes', group: 'chest', level: 'ง่าย', equip: 'เคเบิล',
@@ -28,6 +31,7 @@ const EXERCISES = [
     desc: 'ยืดและบีบกล้ามเนื้อหน้าอกได้อย่างเต็มพิสัย เหมาะสำหรับการเพิ่ม definition และ pump ที่ดีเยี่ยม',
     sets: [{label:'Set 1-3',val:'3 × 15'},{label:'Superset',val:'Crossover 3×12'}],
     color: '#7c3aed', emoji: '🦋', grad: 'linear-gradient(135deg,#1e1b4b,#0f172a)',
+    img: IMG_BASE + 'Incline_Cable_Flye/0.jpg',
   },
   // BACK
   {
@@ -36,6 +40,7 @@ const EXERCISES = [
     desc: 'ราชาแห่งท่าออกกำลังกายส่วนหลัง สร้าง V-taper ที่โดดเด่น พัฒนาความแข็งแรงแบบฟังก์ชัน',
     sets: [{label:'Set 1',val:'3-5 × Max reps'},{label:'Weighted',val:'3 × 6-8'},{label:'Negatives',val:'3 × 5'}],
     color: '#06b6d4', emoji: '🔝', grad: 'linear-gradient(135deg,#0c4a6e,#0f172a)',
+    img: IMG_BASE + 'Wide-Grip_Rear_Pull-Up/0.jpg',
   },
   {
     id: 5, name: 'Barbell Row', group: 'back', level: 'ปานกลาง', equip: 'บาร์เบล',
@@ -43,6 +48,7 @@ const EXERCISES = [
     desc: 'ท่า compound สำคัญสำหรับความหนาและความแข็งแรงของหลัง คู่กันกับ Bench Press เสมอ',
     sets: [{label:'Warm-up',val:'2 × 12'},{label:'Working',val:'4 × 8 @ 70%'},{label:'Pause',val:'2 × 6 (2s hold)'}],
     color: '#06b6d4', emoji: '🎣', grad: 'linear-gradient(135deg,#164e63,#0f172a)',
+    img: IMG_BASE + 'Bent_Over_Barbell_Row/0.jpg',
   },
   {
     id: 6, name: 'Lat Pulldown', group: 'back', level: 'ง่าย', equip: 'เครื่อง',
@@ -50,6 +56,7 @@ const EXERCISES = [
     desc: 'ทางเลือกที่ดีสำหรับผู้ที่ยัง Pull-up ไม่ได้ ช่วยพัฒนา lat ให้กว้างและแข็งแรง',
     sets: [{label:'Set 1-4',val:'4 × 12'},{label:'Close grip',val:'2 × 15'}],
     color: '#06b6d4', emoji: '⬇️', grad: 'linear-gradient(135deg,#083344,#0f172a)',
+    img: IMG_BASE + 'Wide-Grip_Lat_Pulldown/0.jpg',
   },
   // LEGS
   {
@@ -58,6 +65,7 @@ const EXERCISES = [
     desc: 'ราชาแห่งท่าขา! พัฒนาทั้งความแข็งแรง มวลกล้ามเนื้อ และการเผาผลาญ มากที่สุดในท่าเดียว',
     sets: [{label:'Warm-up',val:'2 × 10'},{label:'Working',val:'5 × 5 @ 80%'},{label:'Back-off',val:'2 × 10 @ 65%'}],
     color: '#10b981', emoji: '🦵', grad: 'linear-gradient(135deg,#064e3b,#0f172a)',
+    img: IMG_BASE + 'Wide_Stance_Barbell_Squat/0.jpg',
   },
   {
     id: 8, name: 'Romanian Deadlift', group: 'legs', level: 'ปานกลาง', equip: 'บาร์เบล',
@@ -65,6 +73,7 @@ const EXERCISES = [
     desc: 'เน้นยืด Hamstring และ Glute อย่างเต็มที่ ช่วยพัฒนา posterior chain และป้องกันบาดเจ็บ',
     sets: [{label:'Set 1-4',val:'4 × 10-12'},{label:'Paused',val:'2 × 8 (3s hold)'}],
     color: '#10b981', emoji: '🍑', grad: 'linear-gradient(135deg,#052e16,#0f172a)',
+    img: IMG_BASE + 'Romanian_Deadlift/0.jpg',
   },
   {
     id: 9, name: 'Leg Press', group: 'legs', level: 'ง่าย', equip: 'เครื่อง',
@@ -72,6 +81,7 @@ const EXERCISES = [
     desc: 'เน้น quad overload ได้อย่างปลอดภัย ดีสำหรับ volume สูงเพื่อเพิ่มมวลกล้ามเนื้อ',
     sets: [{label:'Set 1-4',val:'4 × 15'},{label:'Drop set',val:'1 × Failure'}],
     color: '#10b981', emoji: '🦿', grad: 'linear-gradient(135deg,#14532d,#0f172a)',
+    img: IMG_BASE + 'Leg_Press/0.jpg',
   },
   // SHOULDERS
   {
@@ -80,6 +90,7 @@ const EXERCISES = [
     desc: 'ท่าหลักสำหรับไหล่ที่กว้างและแข็งแรง เป็น indicator ของความแข็งแรงส่วนบนที่ดีที่สุด',
     sets: [{label:'Warm-up',val:'2 × 12'},{label:'Working',val:'4 × 8'},{label:'Push Press',val:'2 × 5'}],
     color: '#f59e0b', emoji: '🏹', grad: 'linear-gradient(135deg,#78350f,#0f172a)',
+    img: IMG_BASE + 'Barbell_Shoulder_Press/0.jpg',
   },
   {
     id: 11, name: 'Lateral Raise', group: 'shoulders', level: 'ง่าย', equip: 'ดัมเบล',
@@ -87,6 +98,7 @@ const EXERCISES = [
     desc: 'ท่าที่ขาดไม่ได้สำหรับสร้างไหล่กว้าง ต้องทำ volume สูงเพื่อผลลัพธ์ที่ดีที่สุด',
     sets: [{label:'Set 1-5',val:'5 × 20-25'},{label:'Cable',val:'3 × 20 (each side)'}],
     color: '#f59e0b', emoji: '✈️', grad: 'linear-gradient(135deg,#451a03,#0f172a)',
+    img: IMG_BASE + 'Side_Laterals_to_Front_Raise/0.jpg',
   },
   {
     id: 12, name: 'Face Pull', group: 'shoulders', level: 'ง่าย', equip: 'เคเบิล',
@@ -94,6 +106,7 @@ const EXERCISES = [
     desc: 'ท่าที่หลายคนมองข้าม แต่สำคัญมากสำหรับสุขภาพไหล่ ป้องกันบาดเจ็บ และ posture ที่ดี',
     sets: [{label:'Set 1-4',val:'4 × 15-20'},{label:'External rotation',val:'2 × 15'}],
     color: '#f59e0b', emoji: '🎯', grad: 'linear-gradient(135deg,#431407,#0f172a)',
+    img: IMG_BASE + 'Face_Pull/0.jpg',
   },
   // ARMS
   {
@@ -102,6 +115,7 @@ const EXERCISES = [
     desc: 'ท่าคลาสสิกที่ดีที่สุดสำหรับพัฒนา bicep peak ใช้น้ำหนักที่เหมาะสมเพื่อ squeeze ที่ด้านบน',
     sets: [{label:'Set 1-4',val:'4 × 10-12'},{label:'21s',val:'3 sets'}],
     color: '#ef4444', emoji: '💪', grad: 'linear-gradient(135deg,#450a0a,#0f172a)',
+    img: IMG_BASE + 'Wide-Grip_Standing_Barbell_Curl/0.jpg',
   },
   {
     id: 14, name: 'Skull Crusher', group: 'arms', level: 'ปานกลาง', equip: 'EZ Bar',
@@ -109,6 +123,7 @@ const EXERCISES = [
     desc: 'ท่าที่มีประสิทธิภาพสูงสุดสำหรับ long head ของ tricep ช่วยสร้างแขนหลังที่นูนและแข็งแรง',
     sets: [{label:'Set 1-4',val:'4 × 10-12'},{label:'Superset',val:'+ Close grip press 4×8'}],
     color: '#ef4444', emoji: '💀', grad: 'linear-gradient(135deg,#3b0000,#0f172a)',
+    img: IMG_BASE + 'EZ-Bar_Skullcrusher/0.jpg',
   },
   {
     id: 15, name: 'Hammer Curl', group: 'arms', level: 'ง่าย', equip: 'ดัมเบล',
@@ -116,6 +131,7 @@ const EXERCISES = [
     desc: 'ช่วยเพิ่มความหนาของแขน พัฒนา Brachialis ที่ดันให้ bicep ดูสูงขึ้น',
     sets: [{label:'Set 1-3',val:'3 × 12-15 (each)'},{label:'Alternating',val:'3 × 10'}],
     color: '#ef4444', emoji: '🔨', grad: 'linear-gradient(135deg,#3c0000,#0f172a)',
+    img: IMG_BASE + 'Alternate_Hammer_Curl/0.jpg',
   },
   // CORE
   {
@@ -124,6 +140,7 @@ const EXERCISES = [
     desc: 'ท่าพื้นฐานที่สร้างความมั่นคงของแกนกลางลำตัว ช่วยทุกท่าออกกำลังกายอื่น',
     sets: [{label:'Time',val:'3 × 60 วินาที'},{label:'Side plank',val:'3 × 45s (each)'},{label:'RKC plank',val:'3 × 30s'}],
     color: '#8b5cf6', emoji: '🧘', grad: 'linear-gradient(135deg,#2e1065,#0f172a)',
+    img: IMG_BASE + 'Plank/0.jpg',
   },
   {
     id: 17, name: 'Cable Crunch', group: 'core', level: 'ง่าย', equip: 'เคเบิล',
@@ -131,6 +148,7 @@ const EXERCISES = [
     desc: 'ท่าเดียวที่ใส่ resistance ได้ตรงๆ บน abs ช่วยพัฒนา six-pack ได้อย่างมีประสิทธิภาพ',
     sets: [{label:'Set 1-4',val:'4 × 15-20'}],
     color: '#8b5cf6', emoji: '⚡', grad: 'linear-gradient(135deg,#1e1b4b,#0f172a)',
+    img: IMG_BASE + 'Kneeling_Cable_Crunch_With_Alternating_Oblique_Twists/0.jpg',
   },
   {
     id: 18, name: 'Hanging Leg Raise', group: 'core', level: 'ปานกลาง', equip: 'บาร์โหน',
@@ -138,6 +156,7 @@ const EXERCISES = [
     desc: 'ท่าที่ยากแต่ผลดีมาก ช่วยพัฒนา lower abs ที่คนส่วนใหญ่ขาดในโปรแกรม',
     sets: [{label:'Set 1-4',val:'4 × 10-15'},{label:'Toes to bar',val:'3 × Max'}],
     color: '#8b5cf6', emoji: '🦵', grad: 'linear-gradient(135deg,#312e81,#0f172a)',
+    img: IMG_BASE + 'Hanging_Leg_Raise/0.jpg',
   },
   // CARDIO
   {
@@ -146,6 +165,7 @@ const EXERCISES = [
     desc: 'วิ่ง interval 20s สปรินต์ 40s พัก ซ้ำ 8-10 รอบ เผาผลาญสูง และ afterburn effect นานถึง 24 ชั่วโมง',
     sets: [{label:'Warm-up',val:'5 นาที เดินเร็ว'},{label:'Sprint',val:'8-10 × 20s sprint / 40s rest'},{label:'Cool down',val:'5 นาที เดิน'}],
     color: '#f43f5e', emoji: '🏃', grad: 'linear-gradient(135deg,#4c0519,#0f172a)',
+    img: IMG_BASE + 'Wind_Sprints/0.jpg',
   },
   {
     id: 20, name: 'Jump Rope', group: 'cardio', level: 'ปานกลาง', equip: 'เชือกกระโดด',
@@ -153,6 +173,7 @@ const EXERCISES = [
     desc: 'Cardio ที่คุ้มค่าที่สุด ทำได้ทุกที่ ช่วยพัฒนาความคล่องตัว จังหวะ และ endurance',
     sets: [{label:'Round 1-5',val:'5 × 3 นาที'},{label:'Double under',val:'3 × 50 reps'}],
     color: '#f43f5e', emoji: '🪢', grad: 'linear-gradient(135deg,#881337,#0f172a)',
+    img: IMG_BASE + 'Rope_Jumping/0.jpg',
   },
 ];
 
@@ -457,7 +478,10 @@ function renderExercises(filter = 'all', query = '') {
   grid.innerHTML = filtered.map(ex => `
     <div class="ex-card" onclick="openExModal(${ex.id})">
       <div class="ex-card-art" style="background:${ex.grad}">
-        ${makeExerciseSVG(ex)}
+        <img class="ex-card-img" src="${ex.img}" alt="${ex.name}"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+          loading="lazy"/>
+        <div class="ex-card-img-fallback" style="display:none">${makeExerciseSVG(ex)}</div>
       </div>
       <div class="ex-card-body">
         <div class="ex-card-name">${ex.name}</div>
@@ -472,6 +496,64 @@ function renderExercises(filter = 'all', query = '') {
 }
 
 function makeExerciseSVG(ex) {
+  // ── DEMO: exercise 1 uses new high-quality style ──────────
+  if (ex.id === 1) {
+    return `<svg width="110" height="110" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bdy" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#daedf9"/>
+          <stop offset="100%" stop-color="#6ea4c8"/>
+        </linearGradient>
+        <radialGradient id="pec" cx="50%" cy="40%" r="65%">
+          <stop offset="0%" stop-color="#4ade80"/>
+          <stop offset="100%" stop-color="#15803d"/>
+        </radialGradient>
+        <filter id="gl"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="ds"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="rgba(0,20,50,0.45)"/></filter>
+      </defs>
+
+      <!-- bench legs -->
+      <rect x="15" y="74" width="6" height="20" rx="3" fill="#2c4a68"/>
+      <rect x="89" y="74" width="6" height="20" rx="3" fill="#2c4a68"/>
+      <!-- bench pad -->
+      <rect x="5" y="63" width="100" height="13" rx="6" fill="#1e3a58" stroke="#3a6080" stroke-width="1.5"/>
+
+      <!-- legs (right end) — drawn behind torso -->
+      <path d="M75,57 Q86,59 92,63" stroke="#5a8aaa" stroke-width="13" stroke-linecap="round"/>
+      <path d="M75,57 Q86,59 92,63" stroke="#cde8f6" stroke-width="9" stroke-linecap="round"/>
+      <path d="M92,63 Q98,70 97,80" stroke="#5a8aaa" stroke-width="12" stroke-linecap="round"/>
+      <path d="M92,63 Q98,70 97,80" stroke="#cde8f6" stroke-width="8" stroke-linecap="round"/>
+
+      <!-- torso (filled rect with rounded ends) -->
+      <rect x="25" y="47" width="54" height="20" rx="10" fill="url(#bdy)" stroke="#82b0cc" stroke-width="1.5" filter="url(#ds)"/>
+
+      <!-- pec muscle highlights -->
+      <ellipse cx="43" cy="57" rx="13" ry="9" fill="url(#pec)" filter="url(#gl)" opacity="0.95"/>
+      <ellipse cx="63" cy="57" rx="13" ry="9" fill="url(#pec)" filter="url(#gl)" opacity="0.95"/>
+
+      <!-- left arm (upper + forearm) pushing bar -->
+      <path d="M43,47 Q41,37 39,25" stroke="#5a8aaa" stroke-width="13" stroke-linecap="round"/>
+      <path d="M43,47 Q41,37 39,25" stroke="#cde8f6" stroke-width="9" stroke-linecap="round"/>
+      <!-- right arm -->
+      <path d="M63,47 Q65,37 67,25" stroke="#5a8aaa" stroke-width="13" stroke-linecap="round"/>
+      <path d="M63,47 Q65,37 67,25" stroke="#cde8f6" stroke-width="9" stroke-linecap="round"/>
+
+      <!-- barbell plates left -->
+      <rect x="10" y="16" width="7" height="18" rx="3" fill="#2c4a68" stroke="#4a6a88" stroke-width="1.5"/>
+      <!-- barbell bar -->
+      <rect x="14" y="22" width="82" height="5" rx="2.5" fill="#3a5a78" stroke="#5a7a98" stroke-width="1"/>
+      <!-- barbell plates right -->
+      <rect x="93" y="16" width="7" height="18" rx="3" fill="#2c4a68" stroke="#4a6a88" stroke-width="1.5"/>
+
+      <!-- head -->
+      <circle cx="16" cy="55" r="11" fill="url(#bdy)" stroke="#82b0cc" stroke-width="1.5" filter="url(#ds)"/>
+
+      <!-- motion arrow (push up) -->
+      <line x1="55" y1="42" x2="55" y2="30" stroke="#22c55e" stroke-width="3" stroke-dasharray="3,2.5" opacity="0.9"/>
+      <polygon points="50,29 60,29 55,22" fill="#22c55e" opacity="0.9"/>
+    </svg>`;
+  }
+
   // 3D-style figure: light body + green muscle highlight + motion arrow
   const B = '#c8daea';                    // body/limb stroke
   const F = 'rgba(180,210,230,0.22)';    // body fill
@@ -913,8 +995,13 @@ function openExModal(id) {
   currentExercise = EXERCISES.find(e => e.id === id);
   if (!currentExercise) return;
   const ex = currentExercise;
-  document.getElementById('modalArt').style.background = ex.grad;
-  document.getElementById('modalArt').innerHTML = makeExerciseSVG(ex);
+  const modalArt = document.getElementById('modalArt');
+  modalArt.style.background = ex.grad;
+  modalArt.innerHTML = `
+    <img class="ex-modal-img" src="${ex.img}" alt="${ex.name}"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" loading="lazy"/>
+    <div class="ex-card-img-fallback" style="display:none">${makeExerciseSVG(ex)}</div>
+  `;
   document.getElementById('modalName').textContent = ex.name;
   document.getElementById('modalDesc').textContent = ex.desc;
   document.getElementById('modalMuscle').textContent = ex.muscle;
